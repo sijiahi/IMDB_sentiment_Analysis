@@ -22,37 +22,37 @@ import os
 def load_data(word_index=None, path='imdb', num_words=None, skip_top=0,
               maxlen=None, seed=113,
               start_char=1, oov_char=2, index_from=3, **kwargs):
-    """Loads the IMDB dataset.
-
-    # Arguments
-        path: where to cache the data (relative to `~/.keras/dataset`).
-        num_words: max number of words to include. Words are ranked
-            by how often they occur (in the training set) and only
-            the most frequent words are kept
-        skip_top: skip the top N most frequently occurring words
-            (which may not be informative).
-        maxlen: sequences longer than this will be filtered out.
-        seed: random seed for sample shuffling.
-        start_char: The start of a sequence will be marked with this character.
-            Set to 1 because 0 is usually the padding character.
-        oov_char: words that were cut out because of the `num_words`
-            or `skip_top` limit will be replaced with this character.
-        index_from: index actual words with this index and higher.
-
-    # Returns
-        Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
-
-    # Raises
-        ValueError: in case `maxlen` is so low
-            that no input sequence could be kept.
-
-    Note that the 'out of vocabulary' character is only used for
-    words that were present in the training set but are not included
-    because they're not making the `num_words` cut here.
-    Words that were not seen in the training set but are in the test set
-    have simply been skipped.
-    """
-    # Legacy support
+    #     """Loads the IMDB dataset.
+    #
+    #     # Arguments
+    #         path: where to cache the data (relative to `~/.keras/dataset`).
+    #         num_words: max number of words to include. Words are ranked
+    #             by how often they occur (in the training set) and only
+    #             the most frequent words are kept
+    #         skip_top: skip the top N most frequently occurring words
+    #             (which may not be informative).
+    #         maxlen: sequences longer than this will be filtered out.
+    #         seed: random seed for sample shuffling.
+    #         start_char: The start of a sequence will be marked with this character.
+    #             Set to 1 because 0 is usually the padding character.
+    #         oov_char: words that were cut out because of the `num_words`
+    #             or `skip_top` limit will be replaced with this character.
+    #         index_from: index actual words with this index and higher.
+    #
+    #     # Returns
+    #         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
+    #
+    #     # Raises
+    #         ValueError: in case `maxlen` is so low
+    #             that no input sequence could be kept.
+    #
+    #     Note that the 'out of vocabulary' character is only used for
+    #     words that were present in the training set but are not included
+    #     because they're not making the `num_words` cut here.
+    #     Words that were not seen in the training set but are in the test set
+    #     have simply been skipped.
+    #     """
+    #     # Legacy support
     if 'nb_words' in kwargs:
         warnings.warn('The `nb_words` argument in `load_data` '
                       'has been renamed `num_words`.')
@@ -78,7 +78,7 @@ def load_data(word_index=None, path='imdb', num_words=None, skip_top=0,
         x_train, labels_train = f['x_train'], f['y_train']
         x_test, labels_test = f['x_test'], f['y_test']
 
-    ## Filtering dataset with vocabulary list
+    # Filtering dataset with vocabulary list
     if word_index is not None:
         word_list = list(word_index.values())
         for train in tqdm(x_train):
@@ -151,7 +151,7 @@ def get_filtered_word_index(path='imdb_word_index.json'):
         path = os.path.join(os.getcwd(), '../dataset/imdb_filtered_word_index.json')
     if os.path.exists(os.path.join(os.getcwd(), 'IMDB_sentiment_Analysis/dataset/imdb_filtered_word_index.json')):
         path = os.path.join(os.getcwd(), 'IMDB_sentiment_Analysis/dataset/imdb_filtered_word_index.json')
-    with open(path) as f:
+    with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 

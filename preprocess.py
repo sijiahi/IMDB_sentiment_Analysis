@@ -4,12 +4,13 @@ import re
 import nltk
 from tqdm import tqdm
 import numpy as np
+from nltk.corpus import stopwords
 
 
 # 数据预处理
 def vectorize_sequences(sequences, dimension=10000):
     # 创建一个全0矩阵->shape(len(sequences), dimension)
-    results = np.zeros((len(sequences), dimension))
+    results = np.zeros((len(sequences), dimension), dtype='float16')
     for i, sequence in enumerate(sequences):
         results[i, sequence] = 1.
     return results
@@ -25,6 +26,7 @@ def tag_words(vocabularyList):
     return vocabularyList
 
 
+# this is to load txt form data from folder
 def loadData(pathDirPos, pathDirNeg):
     posAllData = []  # 积极评论
     negAllData = []  # 消极评论
@@ -37,13 +39,13 @@ def loadData(pathDirPos, pathDirNeg):
             # child = os.path.join('%s' % files)
             filename = os.path.join(root, name)
             lineDataPos = []  # One comment
-            with open(filename) as childFile:
+            with open(filename, errors='ignore') as childFile:
                 for lines in childFile:
                     lineString = re.sub(r'[\n\.\!\/_\-$%^*(+\"\')]+|[+—()?【】“”！:,;.？、~@#￥%…&*（）0123456789]+', ' ',
                                         lines)
                     line = lineString.split(' ')
                     for word in line:
-                        if word != "" and len(word) > 1:  # 删除空白字符，并筛选出长度大于1的单词
+                        if word != " " and len(word) > 1:  # 删除空白字符，并筛选出长度大于1的单词
                             lineDataPos.append(word)
             posAllData.append(lineDataPos)
             posLabels.append(1)
@@ -55,14 +57,14 @@ def loadData(pathDirPos, pathDirNeg):
             # child = os.path.join('%s' % files)
             filename = os.path.join(root, name)
             lineDataNeg = []  # One comment
-            with open(filename) as childFile:
+            with open(filename, errors='ignore') as childFile:
                 for lines in childFile:
                     lineString = re.sub(r'[\n\.\!\/_\-$%^*(+\"\')]+|[+—()?【】“”！:,;.？、~@#￥%…&*（）0123456789]+', ' ',
                                         lines)
                     # 用空白分割/txt_sentoken/pos/" + child regEx = re.compile(r'[^a-zA-Z]|\d')
                     line = lineString.split(' ')
                     for word in line:
-                        if word != "" and len(word) > 1:  # 删除空白字符，并筛选出长度大于1的单词
+                        if word != " " and len(word) > 1:  # 删除空白字符，并筛选出长度大于1的单词
                             lineDataNeg.append(word)
             negAllData.append(lineDataNeg)
             negLabels.append(0)
@@ -159,3 +161,5 @@ def setOfWordsListToVecTor(vocabularylist, comments):
         vocabMarked = setOfWordsToVecTor(vocabularylist, comments[i])
         vocabMarkedList.append(vocabMarked)
     return vocabMarkedList
+
+
